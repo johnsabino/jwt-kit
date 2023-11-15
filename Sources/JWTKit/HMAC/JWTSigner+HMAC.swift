@@ -9,6 +9,13 @@ extension JWTSigner {
     public static func hs256<Key: DataProtocol>(key: Key) -> JWTSigner { .hs256(key: key, jsonEncoder: nil, jsonDecoder: nil) }
     public static func hs256(key: SymmetricKey) -> JWTSigner { .hs256(key: key, jsonEncoder: nil, jsonDecoder: nil) }
 
+    public static func hs256(key: String, isEncoded: Bool) -> JWTSigner {
+        if isEncoded, let decodedKey = Data(base64Encoded: key) {
+            return .hs256(key: decodedKey, jsonEncoder: nil, jsonDecoder: nil)
+        }
+        return .hs256(key: key, jsonEncoder: nil, jsonDecoder: nil)
+    }
+    
     public static func hs256(key: String, jsonEncoder: (any JWTJSONEncoder)?, jsonDecoder: (any JWTJSONDecoder)?) -> JWTSigner {
         .hs256(key: [UInt8](key.utf8), jsonEncoder: jsonEncoder, jsonDecoder: jsonDecoder)
     }
